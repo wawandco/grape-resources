@@ -1,0 +1,5 @@
+module Grape
+  module Resources
+    VERSION = "0.0.1.alpha"
+  end
+end
