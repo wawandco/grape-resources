@@ -1,6 +1,7 @@
 # Grape::Resources
 
-TODO: Write a gem description
+Grape-resources is an extension of the grape API framework that allows to scaffold easily models that could not contain much logic, it allows you also to specify wich of the REST methods to scaffold in case you dont want to generate those all.
+
 
 ## Installation
 
@@ -18,7 +19,39 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Imagine you want to build the basic CRUD for one of your models inside your grap API, for the example lets say its called Player.
+
+In your api/my_api.rb
+
+```ruby
+
+class MyApi::API < Grape::API
+  resources_for(Player)
+end
+
+```
+This should generate by default the following routes:
+
+    GET     /players
+    GET     /player/:id
+    POST    /player
+    PUT     /player/:id
+    DELETE  /player/:id
+
+In case you only want some of the routes you can specify these to the resource method like:
+
+```ruby
+
+class MyApi::API < Grape::API
+  resources_for(Player, [:list, :read])
+end
+
+```
+
+And again this should only generate the following routes:
+
+    GET     /players
+    GET     /player/:id
 
 ## Contributing
 
