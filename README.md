@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/wawandco/grape-resources.svg?branch=config-adding-travis)](https://travis-ci.org/wawandco/grape-resources)
+
 # Grape::Resources
 
 Grape-resources is an extension of the grape API framework that allows to scaffold easily models that could not contain much logic, it allows you also to specify wich of the REST methods to scaffold in case you dont want to generate those all.
