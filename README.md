@@ -1,3 +1,4 @@
+[![Code Climate](https://codeclimate.com/github/wawandco/grape-resources.png)](https://codeclimate.com/github/wawandco/grape-resources)
 [![Build Status](https://travis-ci.org/wawandco/grape-resources.svg?branch=config-adding-travis)](https://travis-ci.org/wawandco/grape-resources)
 
 # Grape::Resources
