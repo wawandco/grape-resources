@@ -4,6 +4,9 @@ require 'database_cleaner'
 require 'factory_girl'
 require "rack/test"
 require "grape"
+require "codeclimate-test-reporter"
+
+CodeClimate::TestReporter.start
 
 ENV["RAILS_ENV"] = "test"
 
