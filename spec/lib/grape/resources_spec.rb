@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'support/sample_api.rb'
 
 describe Grape::Resources do
   subject { 
@@ -10,10 +9,24 @@ describe Grape::Resources do
     subject
   end
 
+  before do
+    subject.include Grape::Resources
+  end
+
+  describe "gem should ensure the class passed is a subclass of ActiveRecord::Base" do
+    it "should raise an error if the class passed is not a subclass of ActiveRecord::Base" do
+      clazz = Object.const_set("NotActiveRecord".classify, Class.new)
+      expect{
+        subject.resources_for(clazz)  
+      }.to raise_error
+      
+    end
+
+  end
+
   describe "routes adding feature" do
     
-    before do
-      subject.include Grape::Resources
+    before do      
       subject.resources_for(User)
     end
 
