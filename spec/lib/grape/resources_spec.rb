@@ -2,14 +2,22 @@ require 'spec_helper'
 require 'support/sample_api.rb'
 
 describe Grape::Resources do
-  subject { SampleAPI.new }
+  subject { 
+    Class.new(Grape::API)
+  }
 
   def app
     subject
   end
 
   describe "routes adding feature" do
-    it "should respond to [GET] /users" do
+    
+    before do
+      subject.include Grape::Resources
+      subject.resources_for(User)
+    end
+
+    it "should respond to [GET] /users" do    
       get "/users"
       expect(last_response.status).to eql 200
     end
@@ -34,14 +42,4 @@ describe Grape::Resources do
       expect(last_response.status).to eql 200
     end
   end
-  
-  it "should work" do
-    expect(1).to eq 1
-  end
-  
-  it "should create a model" do
-    user = create(:user)
-    expect(user.class.name).to eq "User"
-  end
-  
 end
