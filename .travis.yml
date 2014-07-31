@@ -4,7 +4,7 @@ cache: bundler
 rvm:  
   - 2.1.2
 
-script: 'bundle exec rspec'
+script: 'CODECLIMATE_REPO_TOKEN=7bddc45388d2b42ac29153b0539f60836f5bc3acf7dd0b93dfa3bd8e4f2adcbc bundle exec rspec'
 
 notifications:
   email:
@@ -12,5 +12,3 @@ notifications:
       - my@email.com
     on_failure: change
     on_success: never
-env:
-  - CODECLIMATE_REPO_TOKEN=7bddc45388d2b42ac29153b0539f60836f5bc3acf7dd0b93dfa3bd8e4f2adcbc 
