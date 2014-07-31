@@ -1,9 +1,9 @@
+require "grape"
 require 'grape/resources'
 require 'active_record'
 require 'database_cleaner'
 require 'factory_girl'
 require "rack/test"
-require "grape"
 require "codeclimate-test-reporter"
 
 CodeClimate::TestReporter.start
