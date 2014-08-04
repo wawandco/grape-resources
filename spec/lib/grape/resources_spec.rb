@@ -32,7 +32,8 @@ describe Grape::Resources do
     end
 
     it "should respond to [GET] /user/:id" do
-      get "/user/1"
+      user = create(:user)
+      get "/user/#{user.id}"
       expect(last_response.status).to eql 200
     end
 
@@ -61,6 +62,17 @@ describe Grape::Resources do
       user = create(:user)
       get "/users.json"
       expect( JSON.parse(last_response.body).size ).to eql User.count
+    end
+
+    it "[GET] /singular/:id should return the instance we're looking for" do
+      user = create(:user)
+      get "/user/#{user.id}.json"      
+      expect( JSON.parse(last_response.body)["name"] ).to eql user.name
+    end
+
+    it "[GET] /singular/:id should return 404 if id doesnt match" do
+      get "/user/#{12323}.json"
+      expect( last_response.status ).to be 404
     end
   end
 end

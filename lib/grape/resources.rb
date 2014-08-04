@@ -16,7 +16,12 @@ module Grape
           result.as_json
         end
 
-        route('GET', ["/#{singular_name}/:id"], {})
+        route('GET', ["/#{singular_name}/:id"], {}) do
+          result = Grape::Resources.find(clazz, params)
+          error!( "#{singular_name} not found", 404) if result.nil?
+          result.as_json
+        end
+
         route('POST', ["/#{singular_name}"], {})
         route('PUT', ["/#{singular_name}/:id"], {})
         route('DELETE', ["/#{singular_name}/:id"], {})
@@ -27,6 +32,10 @@ module Grape
   module Resources
     def self.list(clazz, params)
       result = clazz.all.to_a
+    end
+
+    def self.find(clazz, params)
+      result = clazz.find_by_id( params[:id])      
     end
   end
 end
