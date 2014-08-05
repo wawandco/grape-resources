@@ -45,11 +45,11 @@ module Grape
   module Resources
 
     def self.list(clazz, params)
-      result = clazz.all.to_a
+      result = clazz.all
     end
 
     def self.find(clazz, params)
-      result = clazz.find_by_id( params[:id])      
+      result = clazz.find_by_id( params[:id])
     end
   end
 end
