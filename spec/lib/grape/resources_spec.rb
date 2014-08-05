@@ -1,16 +1,13 @@
 require 'spec_helper'
+require 'support/examples/api_example'
 
 describe Grape::Resources do
   subject { 
-    Class.new(Grape::API)
+    Class.new(APIExample)
   }
 
   def app
     subject
-  end
-
-  before do
-    subject.include Grape::Resources
   end
 
   describe "gem should ensure the class passed is a subclass of ActiveRecord::Base" do
@@ -19,24 +16,24 @@ describe Grape::Resources do
       expect{
         subject.resources_for(clazz)  
       }.to raise_error
-      
     end
-
   end
 
   describe "routes adding feature" do
     
     before do      
       subject.resources_for(User)
+      subject.format :json
     end
 
-    it "should respond to [GET] /users" do    
-      get "/users"
+    it "should respond to [GET] /users.json" do    
+      get "/users.json"
       expect(last_response.status).to eql 200
     end
 
     it "should respond to [GET] /user/:id" do
-      get "/user/1"
+      user = create(:user)
+      get "/user/#{user.id}"
       expect(last_response.status).to eql 200
     end
 
@@ -53,6 +50,29 @@ describe Grape::Resources do
     it "should respond to [DELETE] /user/:id" do
       delete "/user/1"
       expect(last_response.status).to eql 200
+    end
+  end
+
+  describe "generated routes" do
+    before do      
+      subject.resources_for(User)      
+    end
+
+    it "[GET] /plural should return the list of elements" do
+      user = create(:user)
+      get "/users.json"
+      expect( JSON.parse(last_response.body).size ).to eql User.count
+    end
+
+    it "[GET] /singular/:id should return the instance we're looking for" do
+      user = create(:user)
+      get "/user/#{user.id}.json"      
+      expect( JSON.parse(last_response.body)["name"] ).to eql user.name
+    end
+
+    it "[GET] /singular/:id should return 404 if id doesnt match" do
+      get "/user/#{12323}.json"
+      expect( last_response.status ).to be 404
     end
   end
 end

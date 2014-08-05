@@ -1,3 +1,4 @@
+
 require "codeclimate-test-reporter"
 CodeClimate::TestReporter.start
 
@@ -7,7 +8,6 @@ require 'active_record'
 require 'database_cleaner'
 require 'factory_girl'
 require "rack/test"
-require "grape"
 
 ENV["RAILS_ENV"] = "test"
 
