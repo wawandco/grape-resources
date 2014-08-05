@@ -13,13 +13,13 @@ module Grape
 
         route('GET', ["/#{plural_name}"], {} ) do                   
           result = Grape::Resources.list(clazz, params)
-          result.as_json
+          result
         end
 
         route('GET', ["/#{singular_name}/:id"], {}) do
           result = Grape::Resources.find(clazz, params)
           error!( "#{singular_name} not found", 404) if result.nil?
-          result.as_json
+          result
         end
 
         route('POST', ["/#{singular_name}"], {})

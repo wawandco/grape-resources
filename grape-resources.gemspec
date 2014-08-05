@@ -32,5 +32,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "grape", '~> 0.8.0'
   spec.add_dependency "activerecord"
   spec.add_dependency "activesupport"
-  spec.add_dependency 'grape-active_model_serializers'
+  spec.add_dependency 'active_model_serializers'
 end
