@@ -48,7 +48,8 @@ describe Grape::Resources do
     end
 
     it "should respond to [DELETE] /user/:id" do
-      delete "/user/1"
+      user = create(:user)
+      delete "/user/#{user.id}"
       expect(last_response.status).to eql 200
     end
   end
@@ -73,6 +74,23 @@ describe Grape::Resources do
     it "[GET] /singular/:id should return 404 if id doesnt match" do
       get "/user/#{12323}.json"
       expect( last_response.status ).to be 404
+    end
+
+    it "[DELETE] /singular/:id should delete the row with the same id" do
+      user = create(:user)
+      expect{
+        delete "/user/#{user.id}"  
+      }.to change{ User.count }
+    end
+
+    it "[DELETE] /singular/:id should return 404 if id not found" do
+      delete "/user/#{12323}.json"
+      expect( last_response.status ).to be 404
+    end
+
+    it "[DELETE] /singular/:id should return 404 if no id passed" do
+      delete "/user"
+      expect( last_response.status ).to be 405
     end
   end
 end

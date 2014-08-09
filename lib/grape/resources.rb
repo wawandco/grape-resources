@@ -17,7 +17,7 @@ module Grape
 
         route('POST', ["/#{singular_name}"], {})
         route('PUT', ["/#{singular_name}/:id"], {})
-        route('DELETE', ["/#{singular_name}/:id"], {})
+        Grape::Resources.delete_endpoint_for(clazz, self)
       end
     end
   end
@@ -41,6 +41,16 @@ module Grape
           result = Grape::Resources.find(clazz, params)
           error!( "#{singular_name} not found", 404) if result.nil?
           result
+        end
+      end
+
+      def delete_endpoint_for(clazz, api_instance)
+        singular_name = clazz.name.underscore
+        
+        api_instance.route('DELETE', ["/#{singular_name}/:id"], {}) do
+          result = Grape::Resources.find(clazz, params)
+          error!( "#{singular_name} not found", 404) if result.nil?
+          result.destroy
         end
       end
 
