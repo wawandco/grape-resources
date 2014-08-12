@@ -5,4 +5,4 @@ ruby '2.1.2'
 
 # Specify your gem's dependencies in grape-resources.gemspec
 gemspec
-gem "codeclimate-test-reporter", group: :test, require: nil 
+
