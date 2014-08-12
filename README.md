@@ -46,7 +46,7 @@ In case you only want some of the routes you can specify these to the resource m
 ```ruby
 
 class MyApi::API < Grape::API
-  resources_for(Player, [:list, :read])
+  resources_for(Player, [:list, :get])
 end
 
 ```
@@ -55,6 +55,14 @@ And again this should only generate the following routes:
 
     GET     /players
     GET     /player/:id
+
+Available options for routes are:
+
+:list   -> [GET]    /players
+:get    -> [GET]    /player/:id
+:post   -> [POST]   /player
+:put    -> [PUT]    /player/:id
+:delete -> [DELETE  /player/:id
 
 ## Contributing
 
