@@ -121,8 +121,7 @@ describe Grape::Resources do
     end
 
     it "[POST] /singular should return validation errors on the response.body" do
-      post "/user"
-      p last_response.body
+      post "/user"      
       expect(last_response.body).to include("Name can't be blank")
     end
 
