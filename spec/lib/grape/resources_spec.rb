@@ -187,4 +187,32 @@ describe Grape::Resources do
     end
      
   end
+
+  describe "it should be able to handle 2 or more resources with different actions" do
+    before do      
+      subject.resources_for(User, [:get] )          
+      subject.resources_for(Car)
+    end
+
+    it "should respond 200 to the GET endpoint" do
+      user = create :user
+      get "/user/#{user.id}"
+      expect(last_response.status).to eql(200)
+    end
+
+    it "should respond 404 to the DELETE endpoint" do
+      user = create :user
+      delete "/user/#{user.id}"
+      expect(last_response.status).to eql(405)
+    end
+
+
+    it "should respond to the DELETE endpoint with a 201" do
+      car = create :car
+      expect{
+        delete "/car/#{car.id}"  
+      }.to change{Car.count}            
+    end
+    
+  end
 end
