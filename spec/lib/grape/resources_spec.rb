@@ -168,4 +168,23 @@ describe Grape::Resources do
     end
 
   end
+
+  describe "endpoints selection" do
+    before do      
+      subject.resources_for(User, [:get] )          
+    end
+
+    it "should respond 200 to the GET endpoint" do
+      user = create :user
+      get "/user/#{user.id}"
+      expect(last_response.status).to eql(200)
+    end
+
+    it "should respond 404 to the DELETE endpoint" do
+      user = create :user
+      delete "/user/#{user.id}"
+      expect(last_response.status).to eql(405)
+    end
+     
+  end
 end
