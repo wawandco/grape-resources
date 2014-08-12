@@ -38,7 +38,7 @@ describe Grape::Resources do
     end
 
     it "should respond to [POST] /user" do
-      post "/user"
+      post "/user", name: "Some name"
       expect(last_response.status).to eql 201
     end
 
@@ -92,5 +92,40 @@ describe Grape::Resources do
       delete "/user"
       expect( last_response.status ).to be 405
     end
+
+    it "[POST] /singular should return 405 if model validation returns false" do
+      post "/user", email: "some@email.com"
+      expect(last_response.status).to be 405
+    end
+
+    it "[POST] /singular should not create model if model validation returns false" do
+      expect{
+        post "/user", email: "some@email.com"
+      }.not_to change{ User.count }      
+    end
+
+    it "[POST] /singular should return 201 if model was created" do
+      post "/user", email: "some@email.com", name: "Juan Perez"
+      expect(last_response.status).to be 201
+    end
+
+    it "[POST] /singular should create a new record of the instance" do
+      expect{
+        post "/user", email: "some@email.com", name: "Juan Perez" 
+      }.to change{ User.count }      
+    end
+
+    it "[POST] /singular should create a new record of the instance" do
+      post "/user", email: "some@email.com", name: "Something Special" 
+      expect(User.last.name).to eql "Something Special"
+    end
+
+    it "[POST] /singular should return validation errors on the response.body" do
+      post "/user"
+      p last_response.body
+      expect(last_response.body).to include("Name can't be blank")
+    end
+
+
   end
 end
