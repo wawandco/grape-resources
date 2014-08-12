@@ -56,7 +56,7 @@ module Grape
         api_instance.route('POST', ["/#{singular_name}"], {}) do
           result = clazz.new
           
-          apply_attributes(result, params)
+          Grape::Resources.apply_attributes(result, params)
           error!( {error: "#{singular_name} is not valid", errors: result.errors.full_messages}, 405) unless result.valid?
           
           result.save
@@ -70,7 +70,7 @@ module Grape
           result = clazz.find_by_id(params[:id])          
           error!( {error: "#{singular_name} with id '#{params[:id]}' was not found"}, 404) unless result.present?
           
-          apply_attributes(result, params)
+          Grape::Resources.apply_attributes(result, params)
           error!( {error: "#{singular_name} is not valid", errors: result.errors.full_messages}, 405) unless result.valid?
           
           result.save          
@@ -82,7 +82,7 @@ module Grape
       def apply_attributes(instance, params)
         instance.attributes.each do |attribute|
           attribute_name = attribute[0]
-          result.send("#{attribute_name}=",params[attribute_name.to_sym]) if params[attribute_name.to_sym]           
+          instance.send("#{attribute_name}=",params[attribute_name.to_sym]) if params[attribute_name.to_sym]           
         end
       end
 
