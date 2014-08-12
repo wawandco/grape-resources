@@ -58,11 +58,11 @@ And again this should only generate the following routes:
 
 Available options for routes are:
 
-:list   -> [GET]    /players
-:get    -> [GET]    /player/:id
-:post   -> [POST]   /player
-:put    -> [PUT]    /player/:id
-:delete -> [DELETE  /player/:id
+- :list   -> [GET]    /players
+- :get    -> [GET]    /player/:id
+- :post   -> [POST]   /player
+- :put    -> [PUT]    /player/:id
+- :delete -> [DELETE  /player/:id
 
 ## Contributing
 
