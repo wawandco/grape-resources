@@ -13,7 +13,7 @@ ENV["RAILS_ENV"] = "test"
 
 RSpec.configure do |config|
   # Remove this line if you don't want RSpec's should and should_not
-  
+  I18n.enforce_available_locales = false
   ActiveRecord::Base.establish_connection(
     :adapter => 'sqlite3',
     :database => ':memory:'
