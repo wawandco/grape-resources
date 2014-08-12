@@ -13,10 +13,8 @@ module Grape
 
         Grape::Resources.list_endpoint_for( clazz, self )
         Grape::Resources.get_endpoint_for( clazz, self )
-        Grape::Resources.create_endpoint_for( clazz, self )
-        
-                
-        route('PUT', ["/#{singular_name}/:id"], {})
+        Grape::Resources.create_endpoint_for( clazz, self )        
+        Grape::Resources.update_endpoint_for( clazz, self )                
         Grape::Resources.delete_endpoint_for(clazz, self)
       end
     end
@@ -35,7 +33,7 @@ module Grape
       end
 
       def get_endpoint_for(clazz, api_instance)      
-      singular_name = singular_name_for clazz  
+        singular_name = singular_name_for clazz  
         api_instance.route('GET', ["/#{singular_name }/:id"], {}) do
           result = Grape::Resources.find(clazz, params)
           error!( "#{singular_name} not found", 404) if result.nil?
@@ -44,7 +42,7 @@ module Grape
       end
 
       def delete_endpoint_for(clazz, api_instance) 
-      singular_name = singular_name_for clazz
+        singular_name = singular_name_for clazz
         
         api_instance.route('DELETE', ["/#{singular_name}/:id"], {}) do
           result = Grape::Resources.find(clazz, params)
@@ -65,6 +63,26 @@ module Grape
 
           error!( {error: "#{singular_name} is not valid", errors: result.errors.full_messages}, 405) unless result.valid?
           result.save
+        end
+      end
+
+      def update_endpoint_for(clazz, api_instance)
+        singular_name = singular_name_for clazz
+
+        api_instance.route('PUT', ["/#{singular_name}/:id"], {}) do
+          result = clazz.find_by_id(params[:id])          
+          error!( {error: "#{singular_name} with id '#{params[:id]}' was not found"}, 404) unless result.present?
+          
+          result.attributes.each do |attribute|
+            attribute_name = attribute[0]
+            result.send("#{attribute_name}=",params[attribute_name.to_sym]) if params[attribute_name.to_sym]           
+          end
+
+          error!( {error: "#{singular_name} is not valid", errors: result.errors.full_messages}, 405) unless result.valid?
+          
+          result.save          
+          result
+          
         end
       end
 

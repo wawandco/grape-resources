@@ -43,7 +43,8 @@ describe Grape::Resources do
     end
 
     it "should respond to [PUT] /user/:id" do
-      put "/user/1"
+      user = create :user
+      put "/user/#{user.id}"
       expect(last_response.status).to eql 200
     end
 
@@ -54,7 +55,7 @@ describe Grape::Resources do
     end
   end
 
-  describe "generated routes" do
+  describe "GET endpoint" do
     before do      
       subject.resources_for(User)      
     end
@@ -75,22 +76,11 @@ describe Grape::Resources do
       get "/user/#{12323}.json"
       expect( last_response.status ).to be 404
     end
+  end
 
-    it "[DELETE] /singular/:id should delete the row with the same id" do
-      user = create(:user)
-      expect{
-        delete "/user/#{user.id}"  
-      }.to change{ User.count }
-    end
-
-    it "[DELETE] /singular/:id should return 404 if id not found" do
-      delete "/user/#{12323}.json"
-      expect( last_response.status ).to be 404
-    end
-
-    it "[DELETE] /singular/:id should return 404 if no id passed" do
-      delete "/user"
-      expect( last_response.status ).to be 405
+  describe "POST endpoint" do
+    before do      
+      subject.resources_for(User)      
     end
 
     it "[POST] /singular should return 405 if model validation returns false" do
@@ -123,8 +113,59 @@ describe Grape::Resources do
     it "[POST] /singular should return validation errors on the response.body" do
       post "/user"      
       expect(last_response.body).to include("Name can't be blank")
+    end    
+  end
+
+  describe "PUT endpoint" do
+    before do      
+      subject.resources_for(User)      
     end
 
+    it "[PUT] /singular/:id should respond 404 if passed id doesnt correspond to valid entity" do
+      put "/user/23888383", name: "Juan", email: "some@email"
+      expect(last_response.status).to eql 404
+    end
+
+    it "[PUT] /singular/:id should 200 if passed id correspond to an existing entity" do
+      user = create(:user)
+      put "/user/#{user.id}", name: "Juan", email: "some@email"
+      expect(last_response.status).to eql 200
+    end
+
+    it "[PUT] /singular/:id should update existing entity we passed the id on the route" do
+      user = create(:user)
+      put "/user/#{user.id}", name: "Juan", email: "some@email"
+      expect(user.reload.name).to eql("Juan")
+    end
+
+    it "[PUT] /singular/:id should respond 405 if passed parameters cause broke validation" do
+      user = create(:user)
+      put "/user/#{user.id}", name: "", email: "some@email"
+      expect( last_response.status).to eql(405)
+    end
+  end
+
+  describe "DELETE endpoint" do
+    before do      
+      subject.resources_for(User)      
+    end
+
+    it "[DELETE] /singular/:id should delete the row with the same id" do
+      user = create(:user)
+      expect{
+        delete "/user/#{user.id}"  
+      }.to change{ User.count }
+    end
+
+    it "[DELETE] /singular/:id should return 404 if id not found" do
+      delete "/user/#{12323}.json"
+      expect( last_response.status ).to be 404
+    end
+
+    it "[DELETE] /singular/:id should return 404 if no id passed" do
+      delete "/user"
+      expect( last_response.status ).to be 405
+    end
 
   end
 end
