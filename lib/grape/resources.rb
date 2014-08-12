@@ -67,15 +67,14 @@ module Grape
         singular_name = singular_name_for clazz
 
         api_instance.route('PUT', ["/#{singular_name}/:id"], {}) do
-          result = clazz.find_by_id(params[:id])          
+          result = clazz.find_by_id(params[:id])        
           error!( {error: "#{singular_name} with id '#{params[:id]}' was not found"}, 404) unless result.present?
           
           Grape::Resources.apply_attributes(result, params)
           error!( {error: "#{singular_name} is not valid", errors: result.errors.full_messages}, 405) unless result.valid?
           
           result.save          
-          result
-          
+          result          
         end
       end
 
