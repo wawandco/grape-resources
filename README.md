@@ -64,7 +64,7 @@ Available options for routes are:
     :put    -> [PUT]    /player/:id
     :delete -> [DELETE  /player/:id
 
-TODO:
+TODO: v0.0.2
 
 - Detect when resources_for is being called inside another resource, in that case, generated routes should 
   consider the parent resource id.
