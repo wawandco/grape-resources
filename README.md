@@ -64,6 +64,31 @@ Available options for routes are:
     :put    -> [PUT]    /player/:id
     :delete -> [DELETE  /player/:id
 
+TODO:
+
+- Detect when resources_for is being called inside another resource, in that case, generated routes should 
+  consider the parent resource id.
+
+  for example:
+
+  ```ruby
+
+    class MyApi::API < Grape::API
+      resources :teams do
+        resources_for(Player, [:list, :get])
+      end
+    end
+
+  ```
+
+  And it should generate: 
+
+    GET     /team/:id/players
+    GET     /team/:id/player/:id
+    POST    /team/:id/player
+    PUT     /team/:id/player/:id
+    DELETE  /team/:id/player/:id
+
 ## Contributing
 
 1. Fork it ( https://github.com/[my-github-username]/grape-resources/fork )
