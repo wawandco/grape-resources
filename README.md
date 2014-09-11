@@ -89,6 +89,27 @@ TODO: v0.0.2
         PUT     /team/:id/player/:id
         DELETE  /team/:id/player/:id
 
+- Allow method to receive a block to allow nested resources, and custom endpoints for a particular team
+
+  for example:
+
+  ```ruby
+
+    class MyApi::API < Grape::API
+      resources_for Player, [:list, :get] do
+        get :tshirt_size do
+            ...
+        end
+      end
+    end
+
+  And it should generate:
+
+        GET     /players
+        GET     /player/:id
+        GET     /players/tshirt_size
+
+
 ## Contributing
 
 1. Fork it ( https://github.com/[my-github-username]/grape-resources/fork )
