@@ -81,7 +81,7 @@ TODO: v0.0.2
 
   ```
 
-  And it should generate: 
+And it should generate: 
 
     GET     /team/:id/players
     GET     /team/:id/player/:id
