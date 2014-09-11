@@ -102,7 +102,8 @@ TODO: v0.0.2
         end
       end
     end
-
+  ```
+  
   And it should generate:
 
         GET     /players
