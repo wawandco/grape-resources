@@ -81,13 +81,13 @@ TODO: v0.0.2
 
   ```
 
-And it should generate: 
+  And it should generate: 
 
-    GET     /team/:id/players
-    GET     /team/:id/player/:id
-    POST    /team/:id/player
-    PUT     /team/:id/player/:id
-    DELETE  /team/:id/player/:id
+        GET     /team/:id/players
+        GET     /team/:id/player/:id
+        POST    /team/:id/player
+        PUT     /team/:id/player/:id
+        DELETE  /team/:id/player/:id
 
 ## Contributing
 
