@@ -253,5 +253,16 @@ describe Grape::Resources do
       post "/cars/engine"
       expect(JSON.parse(last_response.body)["something"]).to eq "cool"
     end
+
+    it "should allow nested resources_for" do
+      subject.class_eval do
+        resources_for(Car, [:list] ) do
+          resources_for(User)
+        end
+      end
+
+      get "/cars/users"
+      expect(last_response.status).to eq 200
+    end
   end
 end
