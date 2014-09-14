@@ -230,5 +230,28 @@ describe Grape::Resources do
       get "/cars/engine"
       expect(last_response.status).to eq 200
     end
+
+    it "blocks inside can be nested as Grape provides" do
+      
+      subject.class_eval do
+        resources_for(Car, [:list] ) do
+          namespace :engine do
+            before do
+              @something = "cool"
+            end
+
+            get do 
+            end
+
+            post do
+              { something: @something }.to_json
+            end
+          end
+        end
+      end
+
+      post "/cars/engine"
+      expect(JSON.parse(last_response.body)["something"]).to eq "cool"
+    end
   end
 end
