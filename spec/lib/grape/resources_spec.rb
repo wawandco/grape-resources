@@ -215,4 +215,20 @@ describe Grape::Resources do
     end
     
   end
+
+  describe "block processing" do
+    it "should accept a block and process it after the resources part" do
+      
+      subject.class_eval do
+        resources_for(Car, [:list] ) do
+          get :engine do
+            ["Cars usually have one engine"]
+          end
+        end
+      end
+
+      get "/cars/engine"
+      expect(last_response.status).to eq 200
+    end
+  end
 end

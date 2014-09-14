@@ -5,17 +5,23 @@ module Grape
   class API
     include Grape::Resources
     class << self
-      def resources_for( clazz, methods=[:list, :get, :post, :put, :delete])
+      def resources_for( clazz, methods=[:list, :get, :post, :put, :delete], &block)
         singular_name = clazz.name.underscore
         plural_name   = clazz.name.pluralize.underscore
 
         raise Error("To use grape_resources on a given class it should inherit from ActiveRecord::Base.( at least for now buddy ;) )") unless clazz < ActiveRecord::Base
+          
+        resources plural_name.to_sym do
+          Grape::Resources.list_endpoint_for( clazz, self ) if methods.include?(:list)
+          yield if block
+        end
 
-        Grape::Resources.list_endpoint_for( clazz, self ) if methods.include?(:list)
-        Grape::Resources.get_endpoint_for( clazz, self ) if methods.include?(:get)
-        Grape::Resources.create_endpoint_for( clazz, self ) if methods.include?(:post)        
-        Grape::Resources.update_endpoint_for( clazz, self ) if methods.include?(:put)               
-        Grape::Resources.delete_endpoint_for(clazz, self) if methods.include?(:delete)
+        resource singular_name.to_sym do
+          Grape::Resources.get_endpoint_for( clazz, self ) if methods.include?(:get)
+          Grape::Resources.create_endpoint_for( clazz, self ) if methods.include?(:post)        
+          Grape::Resources.update_endpoint_for( clazz, self ) if methods.include?(:put)               
+          Grape::Resources.delete_endpoint_for( clazz, self) if methods.include?(:delete)
+        end
       end
     end
   end
@@ -26,15 +32,15 @@ module Grape
       def list_endpoint_for(clazz, api_instance)
         plural_name   = clazz.name.pluralize.underscore
 
-        api_instance.route('GET', ["/#{plural_name}"], {} ) do                   
+        api_instance.get do
           result = Grape::Resources.list(clazz, params)
           result
         end
       end
 
-      def get_endpoint_for(clazz, api_instance)      
+      def get_endpoint_for(clazz, api_instance)   
         singular_name = singular_name_for clazz  
-        api_instance.route('GET', ["/#{singular_name }/:id"], {}) do
+        api_instance.get ":id" do
           result = Grape::Resources.find(clazz, params)
           error!( "#{singular_name} not found", 404) if result.nil?
           result
@@ -44,7 +50,7 @@ module Grape
       def delete_endpoint_for(clazz, api_instance) 
         singular_name = singular_name_for clazz
         
-        api_instance.route('DELETE', ["/#{singular_name}/:id"], {}) do
+        api_instance.delete ":id" do
           result = Grape::Resources.find(clazz, params)
           error!( "#{singular_name} not found", 404) if result.nil?
           result.destroy
@@ -53,7 +59,7 @@ module Grape
 
       def create_endpoint_for(clazz, api_instance)
         singular_name = singular_name_for clazz
-        api_instance.route('POST', ["/#{singular_name}"], {}) do
+        api_instance.post do
           result = clazz.new
           
           Grape::Resources.apply_attributes(result, params)
@@ -66,7 +72,7 @@ module Grape
       def update_endpoint_for(clazz, api_instance)
         singular_name = singular_name_for clazz
 
-        api_instance.route('PUT', ["/#{singular_name}/:id"], {}) do
+        api_instance.put ":id" do
           result = clazz.find_by_id(params[:id])        
           error!( {error: "#{singular_name} with id '#{params[:id]}' was not found"}, 404) unless result.present?
           
