@@ -5,7 +5,7 @@ module Grape
   class API
     include Grape::Resources
     class << self
-      def resources_for( clazz, methods=[:list, :get, :post, :put, :delete], &block)
+      def resources_for( clazz, methods=[:list, :get, :post, :put, :delete])
         singular_name = clazz.name.underscore
         plural_name   = clazz.name.pluralize.underscore
 
@@ -13,7 +13,7 @@ module Grape
           
         resources plural_name.to_sym do
           Grape::Resources.list_endpoint_for( clazz, self ) if methods.include?(:list)
-          yield if block
+          yield if block_given?
         end
 
         resource singular_name.to_sym do
