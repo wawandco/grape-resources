@@ -215,4 +215,54 @@ describe Grape::Resources do
     end
     
   end
+
+  describe "block processing" do
+    it "should accept a block and process it after the resources part" do
+      
+      subject.class_eval do
+        resources_for(Car, [:list] ) do
+          get :engine do
+            ["Cars usually have one engine"]
+          end
+        end
+      end
+
+      get "/cars/engine"
+      expect(last_response.status).to eq 200
+    end
+
+    it "blocks inside can be nested as Grape provides" do
+      
+      subject.class_eval do
+        resources_for(Car, [:list] ) do
+          namespace :engine do
+            before do
+              @something = "cool"
+            end
+
+            get do 
+            end
+
+            post do
+              { something: @something }.to_json
+            end
+          end
+        end
+      end
+
+      post "/cars/engine"
+      expect(JSON.parse(last_response.body)["something"]).to eq "cool"
+    end
+
+    it "should allow nested resources_for" do
+      subject.class_eval do
+        resources_for(Car, [:list] ) do
+          resources_for(User)
+        end
+      end
+
+      get "/cars/users"
+      expect(last_response.status).to eq 200
+    end
+  end
 end
