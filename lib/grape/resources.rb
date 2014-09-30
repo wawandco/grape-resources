@@ -105,9 +105,6 @@ module Grape
         clazz.name.underscore
       end
 
-      def plural_name_for( clazz ) 
-        clazz.name.pluralize.underscore
-      end
     end
   end
 end

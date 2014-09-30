@@ -64,7 +64,29 @@ Available options for routes are:
     :put    -> [PUT]    /player/:id
     :delete -> [DELETE  /player/:id
 
-TODO: v0.0.2
+resources_for method can receive a block to allow nested resources, and custom endpoints for a particular class
+
+for example:
+
+```ruby
+
+  class MyApi::API < Grape::API
+    resources_for Player, [:list, :get] do
+      get :tshirt_size do
+          ...
+      end
+    end
+  end
+```
+  
+And it will generate:
+
+      GET     /players
+      GET     /player/:id
+      GET     /players/tshirt_size
+
+
+TODO: v0.0.3
 
 - Detect when resources_for is being called inside another resource, in that case, generated routes should 
   consider the parent resource id.
@@ -89,26 +111,6 @@ TODO: v0.0.2
         PUT     /team/:id/player/:id
         DELETE  /team/:id/player/:id
 
-- Allow method to receive a block to allow nested resources, and custom endpoints for a particular team
-
-  for example:
-
-  ```ruby
-
-    class MyApi::API < Grape::API
-      resources_for Player, [:list, :get] do
-        get :tshirt_size do
-            ...
-        end
-      end
-    end
-  ```
-  
-  And it should generate:
-
-        GET     /players
-        GET     /player/:id
-        GET     /players/tshirt_size
 
 
 ## Contributing
