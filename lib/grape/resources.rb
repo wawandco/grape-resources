@@ -6,32 +6,34 @@ module Grape
     include Grape::Resources
     class << self
       def resources_for( clazz, methods=[:list, :get, :post, :put, :delete])
-        singular_name = clazz.name.underscore
-        plural_name   = clazz.name.pluralize.underscore
-
         raise Error("To use grape_resources on a given class it should inherit from ActiveRecord::Base.( at least for now buddy ;) )") unless clazz < ActiveRecord::Base
-          
+        
+        plural_name = clazz.name.pluralize.underscore        
         resources plural_name.to_sym do
           Grape::Resources.list_endpoint_for( clazz, self ) if methods.include?(:list)
           yield if block_given?
         end
 
-        resource singular_name.to_sym do
-          Grape::Resources.get_endpoint_for( clazz, self ) if methods.include?(:get)
-          Grape::Resources.create_endpoint_for( clazz, self ) if methods.include?(:post)        
-          Grape::Resources.update_endpoint_for( clazz, self ) if methods.include?(:put)               
-          Grape::Resources.delete_endpoint_for( clazz, self) if methods.include?(:delete)
-        end
+        Grape::Resources.load_singular_endpoints(clazz, self, methods)   
       end
     end
   end
 
   module Resources
     class << self
+
+      def load_singular_endpoints( clazz, api_instance, methods)
+        singular_name = singular_name_for clazz
+
+        api_instance.resource singular_name.to_sym do
+          Grape::Resources.get_endpoint_for( clazz, api_instance ) if methods.include?(:get)
+          Grape::Resources.create_endpoint_for( clazz, api_instance ) if methods.include?(:post)        
+          Grape::Resources.update_endpoint_for( clazz, api_instance ) if methods.include?(:put)               
+          Grape::Resources.delete_endpoint_for( clazz, api_instance) if methods.include?(:delete)
+        end
+      end
       
       def list_endpoint_for(clazz, api_instance)
-        plural_name   = clazz.name.pluralize.underscore
-
         api_instance.get do
           result = Grape::Resources.list(clazz, params)
           result
@@ -101,6 +103,10 @@ module Grape
 
       def singular_name_for( clazz ) 
         clazz.name.underscore
+      end
+
+      def plural_name_for( clazz ) 
+        clazz.name.pluralize.underscore
       end
     end
   end
