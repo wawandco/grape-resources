@@ -9,16 +9,18 @@ Grape-resources is an extension of the grape API framework that allows to scaffo
 ## Installation
 
 Add this line to your application's Gemfile:
-
-    gem 'grape-resources'
+```
+gem 'grape-resources'
+```
 
 And then execute:
-
-    $ bundle
-
+```
+$ bundle
+```
 Or install it yourself as:
-
-    $ gem install grape-resources
+```
+$ gem install grape-resources
+```
 
 ## Usage
 
@@ -52,24 +54,25 @@ end
 ```
 
 And again this should only generate the following routes:
-
-    GET     /players
-    GET     /player/:id
+```
+GET     /players
+GET     /player/:id
+```
 
 Available options for routes are:
-
-    :list   -> [GET]    /players
-    :get    -> [GET]    /player/:id
-    :post   -> [POST]   /player
-    :put    -> [PUT]    /player/:id
-    :delete -> [DELETE  /player/:id
+```
+:list   -> [GET]    /players
+:get    -> [GET]    /player/:id
+:post   -> [POST]   /player
+:put    -> [PUT]    /player/:id
+:delete -> [DELETE  /player/:id
+```
 
 resources_for method can receive a block to allow nested resources, and custom endpoints for a particular class
 
 for example:
 
 ```ruby
-
   class MyApi::API < Grape::API
     resources_for Player, [:list, :get] do
       get :tshirt_size do
@@ -78,38 +81,37 @@ for example:
     end
   end
 ```
-  
+
 And it will generate:
-
-      GET     /players
-      GET     /player/:id
-      GET     /players/tshirt_size
-
+```
+GET     /players
+GET     /player/:id
+GET     /players/tshirt_size
+```
 
 TODO: v0.0.3
 
-- Detect when resources_for is being called inside another resource, in that case, generated routes should 
+- Detect when resources_for is being called inside another resource, in that case, generated routes should
   consider the parent resource id.
 
   for example:
 
   ```ruby
-
     class MyApi::API < Grape::API
       resources :teams do
         resources_for(Player, [:list, :get])
       end
     end
-
   ```
 
-  And it should generate: 
-
-        GET     /team/:id/players
-        GET     /team/:id/player/:id
-        POST    /team/:id/player
-        PUT     /team/:id/player/:id
-        DELETE  /team/:id/player/:id
+  And it should generate:
+  ```
+    GET     /team/:id/players
+    GET     /team/:id/player/:id
+    POST    /team/:id/player
+    PUT     /team/:id/player/:id
+    DELETE  /team/:id/player/:id
+  ```
 
 
 
