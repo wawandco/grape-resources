@@ -3,7 +3,7 @@
 [![Test Coverage](https://codeclimate.com/github/wawandco/grape-resources/badges/coverage.svg)](https://codeclimate.com/github/wawandco/grape-resources)
 # Grape::Resources
 
-Grape-resources is an extension of the grape API framework that allows to scaffold easily models that could not contain much logic, it allows you also to specify wich of the REST methods to scaffold in case you dont want to generate those all.
+Grape-resources is an extension of the grape API framework that allows to scaffold easily models that could not contain much logic, it allows you also to specify which of the REST methods to scaffold in case you dont want to generate those all.
 
 
 ## Installation
